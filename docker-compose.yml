@@ -33,6 +33,8 @@ services:
     networks:
       - backend-network
       - frontend-network
+    volumes:
+      - ./api:/api
 
   frontend:
     depends_on:
@@ -45,6 +47,8 @@ services:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend-network
+    volumes:
+      - ./frontend:/frontend
 
 volumes: 
   db:
