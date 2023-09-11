@@ -4,6 +4,11 @@ const cors = require("cors");
 
 const app = express();
 
+const userController = require("./controllers/user.controller");
+
+const authMiddleware = require("./middlewares/auth.middleware");
+const userMiddleware = require("./middlewares/user.middleware");
+
 /*
 var corsOptions = {
   origin: process.env.CLIENT_ORIGIN || "http://localhost:8081"
@@ -14,6 +19,8 @@ app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
+
+app.use(authMiddleware);
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
@@ -26,10 +33,11 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/usuario", (req, res) => {
-  const { nombre, edad } = req.body;
-  res.send(`El nombre es: ${nombre} y la edad es: ${edad}`);
-});
+app.post("/user", userController.createUser);
+app.get("/user", userController.readUsers);
+app.put("/user/:id", userMiddleware, userController.updateUser);
+app.delete("/user/:id", userMiddleware, userController.deleteUser);
+
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
