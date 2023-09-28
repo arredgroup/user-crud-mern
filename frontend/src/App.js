@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import Count from "./components/count/count";
-
+import UserList from "./pages/users/UserList";
 
 class App extends Component {
   render() {
     return (
       <div>
         <h1>React App</h1>
-        <Count />
+        <UserList />
       </div>
     );
   }
