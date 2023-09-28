@@ -9,6 +9,21 @@ const userController = require("./controllers/user.controller");
 const authMiddleware = require("./middlewares/auth.middleware");
 const userMiddleware = require("./middlewares/user.middleware");
 
+const db = require("./models/mongodb");
+console.log(db.url);
+db.mongoose
+    .connect(db.url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
+    .then(() => {
+      console.log("Connected to the database!");
+    })
+    .catch(err => {
+      console.log("Cannot connect to the database!", err);
+      process.exit();
+    });
+
 /*
 var corsOptions = {
   origin: process.env.CLIENT_ORIGIN || "http://localhost:8081"
@@ -35,7 +50,8 @@ app.get("/", (req, res) => {
 
 app.post("/user", userController.createUser);
 app.get("/user", userController.readUsers);
-app.put("/user/:id", userMiddleware, userController.updateUser);
+app.get("/user/search/:nombre", userController.getUserByName);
+app.put("/user/:nombre", userController.updateUser);
 app.delete("/user/:id", userMiddleware, userController.deleteUser);
 
 
