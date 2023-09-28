@@ -48,11 +48,12 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/user", userController.createUser);
+app.post("/user",userMiddleware, userController.createUser);
 app.get("/user", userController.readUsers);
-app.get("/user/search/:nombre", userController.getUserByName);
-app.put("/user/:nombre", userController.updateUser);
-app.delete("/user/:id", userMiddleware, userController.deleteUser);
+app.get("/user/search/nombre/:nombre", userController.getUserByName);
+app.get("/user/search/rut/:rut", userController.getUserByName);
+app.put("/user/:rut",userMiddleware, userController.updateUser);
+app.delete("/user/:rut", userMiddleware, userController.deleteUser);
 
 
 // set port, listen for requests

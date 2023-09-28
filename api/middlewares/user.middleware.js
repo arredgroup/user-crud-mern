@@ -1,12 +1,9 @@
-const validateID = (req, res, next) => {
-    const id = req.params.id;
-    if (!id) {
-        return res.status(400).json({ msg: 'El ID es requerido' });
-    }
-    if ( isNaN(id) ) {
-        return res.status(401).json({msg: 'El ID es inválido'});
+const validateRUT = (req, res, next) => {
+    const rut = req.params.rut;
+    if (!rut) {
+        return res.status(400).json({ msg: 'El RUT es requerido' });
     }
     next();
 }
 
-module.exports = validateID;
+module.exports = validateRUT;
