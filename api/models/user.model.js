@@ -1,12 +1,12 @@
 module.exports = mongoose => {
     var schema = mongoose.Schema(
         {
-            id: Number,
+            rut: String,
             nombre: String,
-            apellido: String,
+            apellido_paterno: String,
+            apellido_materno: String,
             fecha_nacimiento: String,
-            pais: String,
-            estado: String
+            fecha_contratacion: String,
         },
         { timestamps: true }
     );

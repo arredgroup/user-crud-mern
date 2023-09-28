@@ -3,12 +3,12 @@ const User = db.user;
 
 const createUser = (req, res) => {
     const user = {};
-    user.id = Math.random()%100;
+    user.rut = req.body.rut;
     user.nombre = req.body.nombre;
-    user.apellido = req.body.apellido;
+    user.apellido_paterno = req.body.apellido_paterno;
+    user.apellido_materno = req.body.apellido_materno;
     user.fecha_nacimiento = req.body.fecha_nacimiento;
-    user.pais = req.body.pais;
-    user.estado = "CREADO CORRECTAMENTE";
+    user.fecha_contratacion = req.body.fecha_contratacion;
 
     let userModel = new User(user);
 
@@ -42,9 +42,20 @@ const getUserByName = (req, res) => {
     });
 }
 
+const getUserByRut = (req, res) => {
+    const rut = req.params.rut;
+    User.findOne({ rut: rut }, (err, users) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        res.status(200).send(users);
+    });
+}
+
 const updateUser = async (req, res) => {
-    const nombre = req.params.nombre;
-    const isUser = await User.findOne({ nombre: nombre }, (err, user) => {
+    const rut = req.params.rut;
+    const isUser = await User.findOne({ rut: rut }, (err, user) => {
         if (err) {
             res.status(500).send({message: err});
             return null;
@@ -58,11 +69,11 @@ const updateUser = async (req, res) => {
     }
     let user = {};
     user.nombre = req.body.nombre || isUser.nombre;
-    user.apellido = req.body.apellido || isUser.apellido;
+    user.apellido_paterno = req.body.apellido_paterno || isUser.apellido_paterno;
+    user.apellido_materno = req.body.apellido_materno || isUser.apellido_materno;
     user.fecha_nacimiento = req.body.fecha_nacimiento || isUser.fecha_nacimiento;
-    user.pais = req.body.pais || isUser.pais;
-    user.estado = "ACTUALIZADO CORRECTAMENTE";
-    User.updateOne({ nombre: nombre }, user, (err, result) => {
+    user.fecha_contratacion = req.body.fecha_contratacion || isUser.fecha_contratacion;
+    User.updateOne({ rut: rut }, user, (err, result) => {
         if (err) {
             res.status(500).send({message: err});
             return;
@@ -72,8 +83,8 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = (req, res) => {
-    const id = req.params.id;
-    User.deleteOne({ id: id }, (err, result) => {
+    const rut = req.params.rut;
+    User.deleteOne({ rut: rut }, (err, result) => {
         if (err) {
             res.status(500).send({message: err});
             return;
@@ -87,6 +98,7 @@ module.exports = {
     createUser,
     readUsers,
     getUserByName,
+    getUserByRut,
     updateUser,
     deleteUser
 }
