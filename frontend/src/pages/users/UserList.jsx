@@ -17,7 +17,7 @@ const UserList = () => {
 
     return (
         <div>
-            <h1>User List</h1>
+            <h1>User List <button className="btn btn-outline-success"><i className="bi bi-person-plus"></i></button></h1>
             <table class="table">
                 <thead>
                     <tr>
@@ -39,6 +39,11 @@ const UserList = () => {
                             <td>{user.apellido_materno}</td>
                             <td>{user.fecha_nacimiento}</td>
                             <td>{user.fecha_contratacion}</td>
+                            <td>
+                                <button className="btn btn-outline-info"><i className="bi bi-eye"></i></button>
+                                <button className="btn btn-outline-warning"><i className="bi bi-pencil"></i></button>
+                                <button className="btn btn-outline-danger"><i className="bi bi-trash"></i></button>
+                            </td>
                         </tr>
                         ))}
                 </tbody>
