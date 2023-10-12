@@ -1,96 +1,39 @@
-const db = require("../models/mongodb");
-const User = db.user;
+const UserService = require('../services/user.service');
 
-const createUser = (req, res) => {
-    const user = {};
-    user.rut = req.body.rut;
-    user.nombre = req.body.nombre;
-    user.apellido_paterno = req.body.apellido_paterno;
-    user.apellido_materno = req.body.apellido_materno;
-    user.fecha_nacimiento = req.body.fecha_nacimiento;
-    user.fecha_contratacion = req.body.fecha_contratacion;
-
-    let userModel = new User(user);
-
-    userModel.save((err, user) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-        res.status(200).send(user);
-    });
+const createUser = async (req, res) => {
+    const service = UserService.getInstance();
+    const response = await service.createUser(req.body);
+    res.code(response.code).send(response.data);
 }
 
-const readUsers = (req, res) => {
-    User.find({}, (err, users) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-        res.status(200).send(users);
-    });
+const readUsers = async (req, res) => {
+    const service = UserService.getInstance();
+    const response = await service.listUsers();
+    res.code(response.code).send(response.data);
 }
 
-const getUserByName = (req, res) => {
-    const nombre = req.params.nombre;
-    User.findOne({ nombre: nombre }, (err, users) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-        res.status(200).send(users);
-    });
+const getUserByName = async (req, res) => {
+    const service = UserService.getInstance();
+    const response = await service.getUserByName(req.params.name);
+    res.code(response.code).send(response.data);
 }
 
-const getUserByRut = (req, res) => {
-    const rut = req.params.rut;
-    User.findOne({ rut: rut }, (err, users) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-        res.status(200).send(users);
-    });
+const getUserByRut = async (req, res) => {
+    const service = UserService.getInstance();
+    const response = await service.getUserByRut(req.params.rut);
+    res.code(response.code).send(response.data);
 }
 
 const updateUser = async (req, res) => {
-    const rut = req.params.rut;
-    const isUser = await User.findOne({ rut: rut }, (err, user) => {
-        if (err) {
-            res.status(500).send({message: err});
-            return null;
-        }
-        return user;
-    });
-
-    if(isUser == null){
-        res.status(500).send({message: "No se encontro el usuario"});
-        return;
-    }
-    let user = {};
-    user.nombre = req.body.nombre || isUser.nombre;
-    user.apellido_paterno = req.body.apellido_paterno || isUser.apellido_paterno;
-    user.apellido_materno = req.body.apellido_materno || isUser.apellido_materno;
-    user.fecha_nacimiento = req.body.fecha_nacimiento || isUser.fecha_nacimiento;
-    user.fecha_contratacion = req.body.fecha_contratacion || isUser.fecha_contratacion;
-    User.updateOne({ rut: rut }, user, (err, result) => {
-        if (err) {
-            res.status(500).send({message: err});
-            return;
-        }
-        res.status(200).send(result);
-    });
+    const service = UserService.getInstance();
+    const response = await service.updateUser(req.params.rut, req.body);
+    res.code(response.code).send(response.data);
 }
 
-const deleteUser = (req, res) => {
-    const rut = req.params.rut;
-    User.deleteOne({ rut: rut }, (err, result) => {
-        if (err) {
-            res.status(500).send({message: err});
-            return;
-        }
-        res.status(200).send(result);
-    });
+const deleteUser = async (req, res) => {
+    const service = UserService.getInstance();
+    const response = await service.deleteUser(req.params.rut);
+    res.code(response.code).send(response.data);
 }
 
 
