@@ -1,17 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import UserList from "./pages/users/UserList";
+import UserCreate from "./pages/users/UserCreate";
 
-class App extends Component {
-  render() {
+export default function App() {
     return (
-      <div>
-        <h1>React App</h1>
-        <UserList />
-      </div>
-    );
-  }
+        <Router>
+            <Routes>
+                <Route
+                    exact
+                    path="/"
+                    element={<UserList />}
+                />
+                <Route path="/createUser" element={<UserCreate />} />
+            </Routes>
+        </Router>
+    )
 }
 
-export default App;

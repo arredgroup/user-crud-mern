@@ -12,6 +12,11 @@ const getUsers = async () => {
     return await instance.get('user');
 }
 
+const createUsers = async (user) => {
+    return await instance.post('user', user);
+}
+
 export {
-    getUsers
+    getUsers,
+    createUsers
 }
