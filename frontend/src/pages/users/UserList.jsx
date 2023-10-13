@@ -17,7 +17,7 @@ const UserList = () => {
 
     return (
         <div>
-            <h1>User List <button className="btn btn-outline-success"><i className="bi bi-person-plus"></i></button></h1>
+            <h1>Lista de Usuarios <button className="btn btn-outline-success"><i className="bi bi-person-plus"></i></button></h1>
             <table class="table">
                 <thead>
                     <tr>
