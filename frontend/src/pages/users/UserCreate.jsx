@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createUsers } from "../../services/user.service";
+import { validate } from 'rut.js';
 
 const UserCreate = () => {
 
@@ -10,8 +11,10 @@ const UserCreate = () => {
     const [fechaNacimiento, setFechaNacimiento] = useState('');
     const [fechaContratacion, setFechaContratacion] = useState('');
 
+    const [alertMessage, setAlertMessage] = useState('');
+
     const handleSubmit = () => {
-        console.log("Botón apretado");
+        if(!checkFormValues()) return;
         createUsers({
             rut,
             nombre,
@@ -22,9 +25,45 @@ const UserCreate = () => {
         });
     }
 
+    const checkFormValues = () => {
+        if (rut === '') {
+            setAlertMessage("Debe ingresar un rut");
+            return false;
+        }
+        if (!validate(rut)) {
+            setAlertMessage("Debe ingresar un rut válido");
+            return false;
+        }
+        if (nombre === '') {
+            setAlertMessage("Debe ingresar un nombre");
+            return false;
+        }
+        if (apellidoPaterno === '') {
+            setAlertMessage("Debe ingresar un apellido paterno");
+            return false;
+        }
+        if (apellidoMaterno === '') {
+            setAlertMessage("Debe ingresar un apellido materno");
+            return false;
+        }
+        if (fechaNacimiento === '') {
+            setAlertMessage("Debe ingresar una fecha de nacimiento");
+            return false;
+        }
+        if (fechaContratacion === '') {
+            setAlertMessage("Debe ingresar una fecha de contratación");
+            return false;
+        }
+        return true;
+    }
+
     return (
         <div>
             <h1>Crear Usuario</h1>
+            { alertMessage!==''? <div className="alert alert-warning alert-dismissible fade show" role="alert">
+                {alertMessage}
+                <button type="button" className="bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={()=>setAlertMessage('')}></button>
+            </div> : null}
             <div>
                 <div className="form-group">
                     <label>Rut</label>
