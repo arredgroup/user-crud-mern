@@ -1,20 +1,16 @@
-# Stage 1
-FROM node:14 as build-stage
+FROM node:16.3.0-alpine
+RUN mkdir -p /app/config /app/src
+WORKDIR /app
+RUN mkdir -p /app/node_modules
+COPY ./package.json ./
+RUN apk --no-cache --virtual build-dependencies add \
+    python3 \
+    make \
+    g++ \
+    && npm install \
+    && apk del build-dependencies
 
-WORKDIR /frontend
-COPY package.json .
+
+COPY ./ ./
 RUN npm install
-COPY . .
-
-ARG REACT_APP_API_BASE_URL
-ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
-
-RUN npm run build
-
-# Stage 2
-FROM nginx:1.17.0-alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build-stage /frontend/build /usr/share/nginx/html
-EXPOSE $REACT_DOCKER_PORT
-
-CMD nginx -g 'daemon off;'
+CMD ["npm", "start"]

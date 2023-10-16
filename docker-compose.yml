@@ -41,14 +41,20 @@ services:
       - api
     build:
       context: ./frontend
+      dockerfile: ./Dockerfile
       args:
         - REACT_APP_API_BASE_URL=$CLIENT_API_BASE_URL
     ports:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend-network
+    command: npm start
+    stdin_open: true
+    tty: true
     volumes:
-      - ./frontend:/frontend
+      - ./frontend:/app
+      - /app/node_modules
+
 
 volumes: 
   db:
