@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import UserList from "./pages/users/UserList";
 import UserCreate from "./pages/users/UserCreate";
+import "./styles/main.css";
 
 export default function App() {
     return (

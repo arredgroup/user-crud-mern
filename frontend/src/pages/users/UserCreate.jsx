@@ -13,8 +13,17 @@ const UserCreate = () => {
 
     const [alertMessage, setAlertMessage] = useState('');
 
+    const [success, setSuccess] = useState(false);
+
+    const [loading, setLoading] = useState(false);
+
     const handleSubmit = () => {
-        if(!checkFormValues()) return;
+        setLoading(true);
+        setSuccess(false);
+        if(!checkFormValues()) {
+            setLoading(false);
+            return;
+        }
         createUsers({
             rut,
             nombre,
@@ -22,6 +31,19 @@ const UserCreate = () => {
             apellido_materno: apellidoMaterno,
             fecha_nacimiento: fechaNacimiento,
             fecha_contratacion: fechaContratacion
+        }).then((response) => {
+            setSuccess(true);
+            setLoading(false);
+            setRut('');
+            setNombre('');
+            setApellidoPaterno('');
+            setApellidoMaterno('');
+            setFechaNacimiento('');
+            setFechaContratacion('');
+        }).catch((error) => {
+            console.log(error);
+            setAlertMessage("Error al crear usuario");
+            setLoading(false);
         });
     }
 
@@ -54,6 +76,7 @@ const UserCreate = () => {
             setAlertMessage("Debe ingresar una fecha de contratación");
             return false;
         }
+        setAlertMessage("");
         return true;
     }
 
@@ -62,7 +85,7 @@ const UserCreate = () => {
             <h1>Crear Usuario</h1>
             { alertMessage!==''? <div className="alert alert-warning alert-dismissible fade show" role="alert">
                 {alertMessage}
-                <button type="button" className="bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={()=>setAlertMessage('')}></button>
+                <button type="button" className="btn btn-link bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={()=>setAlertMessage('')}></button>
             </div> : null}
             <div>
                 <div className="form-group">
@@ -91,6 +114,16 @@ const UserCreate = () => {
                 </div>
                 <button type="button" className="btn btn-primary" onClick={handleSubmit}>Crear</button>
             </div>
+            { loading?
+                <div className="spinner-border" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+                : null }
+            { success?
+                <div className="alert alert-success alert-dismissible fade show" role="alert">
+                    Usuario Creado Correctamente
+                    <button type="button" className="btn btn-link bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={()=>setSuccess(false)}></button>
+                </div> : null }
         </div>
     );
 }

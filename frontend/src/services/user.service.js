@@ -16,7 +16,17 @@ const createUsers = async (user) => {
     return await instance.post('user', user);
 }
 
+const deleteUser = async (rut)  => {
+    return await instance.delete(`user/${rut}`);
+}
+
+const updateUser = async (rut, user) => {
+    return await instance.put(`user/${rut}`, user);
+}
+
 export {
     getUsers,
-    createUsers
+    createUsers,
+    deleteUser,
+    updateUser,
 }
