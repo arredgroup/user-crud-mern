@@ -50,7 +50,7 @@ app.get("/", (req, res) => {
 app.post("/user",userMiddleware, userController.createUser);
 app.get("/user", userController.readUsers);
 app.get("/user/search/nombre/:nombre", userController.getUserByName);
-app.get("/user/search/rut/:rut", userController.getUserByName);
+app.get("/user/search/rut/:rut", userController.getUserByRut);
 app.put("/user/:rut",userMiddleware, userController.updateUser);
 app.delete("/user/:rut", userMiddleware, userController.deleteUser);
 
