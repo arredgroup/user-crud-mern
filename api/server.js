@@ -5,6 +5,7 @@ const cors = require("cors");
 const app = express();
 
 const userController = require("./controllers/user.controller");
+const checkController = require('./controllers/check.controller');
 
 const authMiddleware = require("./middlewares/auth.middleware");
 const userMiddleware = require("./middlewares/user.middleware");
@@ -47,6 +48,9 @@ app.get("/", (req, res) => {
   });
 });
 
+/*
+ * Routes for User
+ */
 app.post("/user",userMiddleware, userController.createUser);
 app.get("/user", userController.readUsers);
 app.get("/user/search/nombre/:nombre", userController.getUserByName);
@@ -54,6 +58,11 @@ app.get("/user/search/rut/:rut", userController.getUserByRut);
 app.put("/user/:rut",userMiddleware, userController.updateUser);
 app.delete("/user/:rut", userMiddleware, userController.deleteUser);
 
+
+/*
+ * Routes for Check
+ */
+app.post("/check", userMiddleware, checkController.createCheck);
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
