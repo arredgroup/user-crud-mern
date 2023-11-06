@@ -63,6 +63,8 @@ app.delete("/user/:rut", userMiddleware, userController.deleteUser);
  * Routes for Check
  */
 app.post("/check", userMiddleware, checkController.createCheck);
+app.get("/check/search/rut/:rut", checkController.searchCheckByRut);
+app.delete("/check/:rut", userMiddleware, checkController.deleteCheck);
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;

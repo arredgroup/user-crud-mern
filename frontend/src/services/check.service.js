@@ -13,7 +13,17 @@ const createCheck = async (check) => {
     return await instance.post('check', check);
 }
 
+const searchCheckByRut = async (rut) => {
+    return await instance.get(`/check/search/rut/${rut}`);
+}
+
+const deleteCheck = async (check) => {
+    return await instance.delete(`check/${check.rut}?fecha=${check.fecha}&hora=${check.hora}`);
+}
+
 
 export {
     createCheck,
+    searchCheckByRut,
+    deleteCheck,
 }
