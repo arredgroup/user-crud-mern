@@ -7,6 +7,8 @@ const ModalMarcacion = (props) => {
     const { user, fecha, showingModal, closeModal } = props;
 
     const [checkStatus, setCheckStatus] = useState(TIPO_MARCACION.ENTRADA);
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const hideModal = () => {
         closeModal();
@@ -19,7 +21,20 @@ const ModalMarcacion = (props) => {
           hora: fecha.toLocaleTimeString(),
           tipo: checkStatus
       }
-      createCheck(check);
+      setLoading(true);
+      setTimeout(()=>{
+      createCheck(check).then((response)=>{
+          setLoading(false);
+          setSuccess(true);
+          setTimeout(() => {
+              hideModal();
+          }, 2000);
+      }).catch((error)=>{
+          console.error(error);
+          setLoading(false);
+          hideModal();
+      });
+      }, 1000);
     };
 
     return (
@@ -57,10 +72,19 @@ const ModalMarcacion = (props) => {
                     </div>
                 </div>
                 <p>Usuario {user?.nombre} usted marcará su {checkStatus===(TIPO_MARCACION.ENTRADA)? 'Entrada' : 'Salida'} con fecha {fecha?.toLocaleString()}</p>
+                { loading?
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                    : null }
+                { success?
+                    <div className="alert alert-success alert-dismissible fade show" role="alert">
+                        Marcación realizada con éxito
+                    </div> : null }
             </Modal.Body>
             <Modal.Footer>
                 <button className="btn btn-secondary" onClick={hideModal}>Volver</button>
-                <button className="btn btn-primary" onClick={() => handleCheck()}>Marcar</button>
+                <button className={`btn btn-primary ${loading? 'disabled' : ''}`} onClick={() => handleCheck()}>Marcar</button>
             </Modal.Footer>
         </Modal>
     )
