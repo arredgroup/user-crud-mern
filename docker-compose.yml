@@ -18,6 +18,7 @@ services:
   api:
     depends_on:
       - mongodb
+      - postgres
     build: ./api
     restart: unless-stopped
     env_file: ./.env
@@ -30,6 +31,10 @@ services:
       - DB_NAME=$MONGODB_DATABASE
       - DB_PORT=$MONGODB_DOCKER_PORT
       - CLIENT_ORIGIN=$CLIENT_ORIGIN
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_HOST=$POSTGRES_HOST
     networks:
       - backend-network
       - frontend-network
@@ -55,6 +60,21 @@ services:
       - ./frontend:/app
       - /app/node_modules
 
+  postgres:
+    image: 'postgres:latest'
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+        - POSTGRES_USER=$POSTGRES_USER
+        - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+        - POSTGRES_DB=$POSTGRES_DB
+        - POSTGRES_HOST=$POSTGRES_HOST
+    ports:
+      - $POSTGRES_LOCAL_PORT:$POSTGRES_DOCKER_PORT
+    volumes:
+      - ./postgres:/var/lib/postgresql/pgdata
+    networks:
+      - backend-network
 
 volumes: 
   db:

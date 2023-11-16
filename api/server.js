@@ -6,6 +6,7 @@ const app = express();
 
 const userController = require("./controllers/user.controller");
 const checkController = require('./controllers/check.controller');
+const sequelizeController = require('./controllers/sequelize.controller');
 
 const authMiddleware = require("./middlewares/auth.middleware");
 const userMiddleware = require("./middlewares/user.middleware");
@@ -65,6 +66,12 @@ app.delete("/user/:rut", userMiddleware, userController.deleteUser);
 app.post("/check", userMiddleware, checkController.createCheck);
 app.get("/check/search/rut/:rut", checkController.searchCheckByRut);
 app.delete("/check/:rut", userMiddleware, checkController.deleteCheck);
+
+/*
+ * Route for Sqeuelize
+ */
+app.get("/sequelize/test", sequelizeController.testConnection);
+
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
