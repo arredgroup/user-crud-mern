@@ -1,4 +1,4 @@
-const db = require("../models/mongodb");
+const db = require("../mongo/mongodb");
 const User = db.user;
 
 const createUser = (req, res) => {

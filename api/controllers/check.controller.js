@@ -1,4 +1,4 @@
-const db = require("../models/mongodb");
+const db = require("../mongo/mongodb");
 const Check = db.check;
 
 const createCheck = (req, res) => {

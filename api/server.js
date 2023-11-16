@@ -10,8 +10,9 @@ const sequelizeController = require('./controllers/sequelize.controller');
 
 const authMiddleware = require("./middlewares/auth.middleware");
 const userMiddleware = require("./middlewares/user.middleware");
+const historialMiddleware = require("./middlewares/historial.middleware");
 
-const db = require("./models/mongodb");
+const db = require("./mongo/mongodb");
 console.log(db.url);
 db.mongoose
     .connect(db.url, {
@@ -37,7 +38,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use(authMiddleware);
-
+app.use(historialMiddleware);
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
