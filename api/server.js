@@ -13,23 +13,23 @@ const userMiddleware = require("./middlewares/user.middleware");
 const db = require("./models/mongodb");
 console.log(db.url);
 db.mongoose
-    .connect(db.url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
-    .then(() => {
-      console.log("Connected to the database!");
-    })
-    .catch(err => {
-      console.log("Cannot connect to the database!", err);
-      process.exit();
-    });
+  .connect(db.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("Connected to the database!");
+  })
+  .catch(err => {
+    console.log("Cannot connect to the database!", err);
+    process.exit();
+  });
 
-var corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
-};
+//var corsOptions = {
+//origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
+//};
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 
 // parse requests of content-type - application/json
@@ -51,11 +51,11 @@ app.get("/", (req, res) => {
 /*
  * Routes for User
  */
-app.post("/user",userMiddleware, userController.createUser);
+app.post("/user", userMiddleware, userController.createUser);
 app.get("/user", userController.readUsers);
 app.get("/user/search/nombre/:nombre", userController.getUserByName);
 app.get("/user/search/rut/:rut", userController.getUserByRut);
-app.put("/user/:rut",userMiddleware, userController.updateUser);
+app.put("/user/:rut", userMiddleware, userController.updateUser);
 app.delete("/user/:rut", userMiddleware, userController.deleteUser);
 
 
