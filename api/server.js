@@ -25,12 +25,12 @@ db.mongoose
       process.exit();
     });
 
-var corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
-};
+//var corsOptions = {
+//  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
+//};
 
-app.use(cors(corsOptions));
-
+//app.use(cors(corsOptions));
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(express.json());
