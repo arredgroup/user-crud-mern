@@ -13,9 +13,15 @@ const DiasTrabajadosReporte = () => {
         if (usuario && usuario.fecha_contratacion) {
             const fechaContratacion = new Date(usuario.fecha_contratacion);
             const fechaActual = new Date();
-            const diferenciaTiempo = fechaActual.getTime() - fechaContratacion.getTime();
-            const diferenciaDias = diferenciaTiempo / (1000 * 3600 * 24);
-            setDiasTrabajados(Math.floor(diferenciaDias));
+            let diasTrabajados = 0;
+    
+            for(let dia = fechaContratacion; dia <= fechaActual; dia.setDate(dia.getDate() + 1)) {
+                if(dia.getDay() !== 0 && dia.getDay() !== 6) {
+                    diasTrabajados++;
+                }
+            }
+    
+            setDiasTrabajados(diasTrabajados);
         }
     }, [usuario]);
 
