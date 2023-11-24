@@ -25,11 +25,13 @@ db.mongoose
       process.exit();
     });
 
-var corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
-};
 
-app.use(cors(corsOptions));
+    // Me da un error de corsOptions, por lo que lo deshabilito
+// var corsOptions = {
+//   origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
+// };
+
+app.use(cors());
 
 
 // parse requests of content-type - application/json
