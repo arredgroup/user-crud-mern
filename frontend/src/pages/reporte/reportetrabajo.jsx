@@ -1,33 +1,33 @@
 import React, { useState, useContext, useEffect } from 'react';
 import {Button, Table} from "react-bootstrap";
-import { UserContext } from '../../services/UserContext';
 import { searchUserByRut } from '../../services/user.service';
-
+import {searchCheckByRut} from '../../services/check.service';
 
 const DiasTrabajadosReporte = () => {
-    const { usuario, setUsuario } = useContext(UserContext);
+    const [usuario, setUsuario] = useState(null);
     const [rut, setRut] = useState('');
     const [diasTrabajados, setDiasTrabajados] = useState(0);
+    const [marcaciones, setMarcaciones] = useState([]);
 
     useEffect(() => {
-        if (usuario && usuario.fecha_contratacion) {
-            const fechaContratacion = new Date(usuario.fecha_contratacion);
-            const fechaActual = new Date();
-            let diasTrabajados = 0;
-    
-            for(let dia = fechaContratacion; dia <= fechaActual; dia.setDate(dia.getDate() + 1)) {
-                if(dia.getDay() !== 0 && dia.getDay() !== 6) {
-                    diasTrabajados++;
-                }
-            }
-    
-            setDiasTrabajados(diasTrabajados);
+        if (usuario) {
+            searchCheckByRut(usuario.rut).then(response => {
+                setMarcaciones(response.data);
+            });
         }
     }, [usuario]);
 
-    const handleRutChange = (e) => {
-        setRut(e.target.value);
-    };
+    useEffect(() => {
+        const diasTrabajadosSet = new Set();
+
+        marcaciones.forEach(marcacion => {
+            const fechaParts = marcacion.fecha.split('-');
+            const fechaStr = `${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}`;
+            diasTrabajadosSet.add(fechaStr);
+        });
+
+        setDiasTrabajados(diasTrabajadosSet.size);
+    }, [marcaciones]);
 
     const searchUser = () => {
         searchUserByRut(rut).then(response => {

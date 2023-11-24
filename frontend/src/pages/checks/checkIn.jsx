@@ -1,14 +1,13 @@
-import React, { useState, useContext } from 'react'; // Importa useContext
+import React, { useState, useContext } from 'react';
 import {Button, Table} from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut, deleteCheck } from '../../services/check.service';
 import ModalMarcacion from "../../components/modalMarcacion/modalMarcacion";
-import { UserContext } from '../../services/UserContext'; // Importa UserContext
 
 const CheckIn = () => {
 
-    const { usuario, setUsuario } = useContext(UserContext); // Accede al UserContext
-
+    
+    const [usuario, setUsuario] = useState(null);
     const [rut, setRut] = useState('');
     const [marcaciones, setMarcaciones] = useState([]);
     const [showModal, setShowModal] = useState(false);
