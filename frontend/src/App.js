@@ -6,6 +6,7 @@ import UserList from "./pages/users/UserList";
 import UserCreate from "./pages/users/UserCreate";
 import CheckIn from "./pages/checks/checkIn";
 import "./styles/main.css";
+import Report from "./pages/Reports/report";
 
 export default function App() {
     return (
@@ -18,6 +19,7 @@ export default function App() {
                 />
                 <Route path="/createUser" element={<UserCreate />} />
                 <Route path="/checkIn" element={<CheckIn />} />
+                <Route path="/report" element={<Report />} />
             </Routes>
         </Router>
     )
