@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUsers } from '../../services/user.service';
 
 const Reports = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -14,10 +15,17 @@ const Reports = () => {
         setUsers(response.data);
     }
 
+    const handlePages = (page) => {
+        if(page === "checkin") {
+            navigate("/checkin");
+        }
+    }
+
     return (
         <div>
             <h1>
                 Reporte de marcaciones de trabajadores
+                <button className="btn btn-outline-primary" onClick={() => handlePages("checkin")}><i className="bi bi-check2-circle"></i></button>
             </h1>
             <table class="table">
                 <thead>

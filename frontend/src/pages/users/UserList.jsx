@@ -30,7 +30,7 @@ const UserList = () => {
         if(page === "create-user") {
             navigate("/createUser");
         }
-        { /* Eliminar redirección a checkin en caso de aplicar en la página general de trabajadores */}
+        // Eliminar redirección a checkin en caso de aplicar en la página general de trabajadores
         if(page === "checkin") {
             navigate("/checkin");
         }
@@ -54,7 +54,7 @@ const UserList = () => {
     return (
         <div>
             <h1>
-            Lista de Usuarios 
+            Lista de Usuarios
             <button className="btn btn-outline-success" onClick={() => handlePages("create-user")}><i className="bi bi-person-plus"></i></button>
             { /* Eliminar botón checkin en caso de aplicar en la página general de trabajadores */}
             <button className="btn btn-outline-primary" onClick={() => handlePages("checkin")}><i className="bi bi-check2-circle"></i></button>

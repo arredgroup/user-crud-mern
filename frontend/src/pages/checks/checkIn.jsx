@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import {Button, Table} from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut, deleteCheck } from '../../services/check.service';
+import { useNavigate } from 'react-router-dom';
 import ModalMarcacion from "../../components/modalMarcacion/modalMarcacion";
 
 const CheckIn = () => {
-
+    const navigate = useNavigate();
     const [rut, setRut] = useState('');
     const [usuario, setUsuario] = useState(null);
     const [marcaciones, setMarcaciones] = useState([]);
@@ -34,9 +35,24 @@ const CheckIn = () => {
         });
     }
 
+    const handlePages = (page) => {
+        if(page === "userlist") {
+            navigate("/");
+        }
+        // Eliminar redirección a reports en caso de aplicar en la página general de trabajadores
+        if(page === "reports") {
+            navigate("/reports");
+        }
+    }
+
     return (
         <div>
-            <h1>Check In</h1>
+            <h1>
+                Check In
+                <button className="btn btn-outline-info" onClick={() => handlePages("userlist")}><i className="bi bi-person-lines-fill"></i></button>
+                <button className="btn btn-outline-primary" onClick={() => handlePages("reports")}><i className="bi bi-clipboard2-data"></i></button>
+                { /* Eliminar botón reports en caso de aplicar en la página general de trabajadores */}
+            </h1>
             <div className="form-group">
                 <label>Rut</label>
                 <input type="text" className="form-control" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />

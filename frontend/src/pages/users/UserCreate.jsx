@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { createUsers } from "../../services/user.service";
 import { validate } from 'rut.js';
+import { useNavigate } from 'react-router-dom';
 
 const UserCreate = () => {
-
+    const navigate = useNavigate();
     const [rut, setRut] = useState('');
     const [nombre, setNombre] = useState('');
     const [apellidoPaterno, setApellidoPaterno] = useState('');
@@ -16,6 +17,12 @@ const UserCreate = () => {
     const [success, setSuccess] = useState(false);
 
     const [loading, setLoading] = useState(false);
+
+    const handlePages = (page) => {
+        if(page === "userlist") {
+            navigate("/");
+        }
+    }
 
     const handleSubmit = () => {
         setLoading(true);
@@ -82,7 +89,10 @@ const UserCreate = () => {
 
     return (
         <div>
-            <h1>Crear Usuario</h1>
+            <h1>
+                Crear Usuario
+                <button className="btn btn-outline-info" onClick={() => handlePages("userlist")}><i className="bi bi-person-lines-fill"></i></button>
+            </h1>
             { alertMessage!==''? <div className="alert alert-warning alert-dismissible fade show" role="alert">
                 {alertMessage}
                 <button type="button" className="btn btn-link bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={()=>setAlertMessage('')}></button>
