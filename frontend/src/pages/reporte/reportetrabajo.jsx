@@ -7,6 +7,8 @@ const DiasTrabajadosReporte = () => {
     const [usuario, setUsuario] = useState(null);
     const [rut, setRut] = useState('');
     const [diasTrabajados, setDiasTrabajados] = useState(0);
+    const [diasMenosDeOchoHoras, setDiasMenosDeOchoHoras] = useState(0);
+    const [horasExtras, sethorasExtras] = useState(0);
     const [marcaciones, setMarcaciones] = useState([]);
 
     useEffect(() => {
@@ -18,16 +20,69 @@ const DiasTrabajadosReporte = () => {
     }, [usuario]);
 
     useEffect(() => {
-        const diasTrabajadosSet = new Set();
-
+        const horasTrabajadasPorDia = {};
+    
         marcaciones.forEach(marcacion => {
             const fechaParts = marcacion.fecha.split('-');
+            const fecha = new Date(fechaParts[2], fechaParts[1] - 1, fechaParts[0]);
             const fechaStr = `${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}`;
-            diasTrabajadosSet.add(fechaStr);
+            const horaParts = marcacion.hora.split(':');
+            const hora = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate(), horaParts[0], horaParts[1]);
+    
+            if (!horasTrabajadasPorDia[fechaStr]) {
+                horasTrabajadasPorDia[fechaStr] = [];
+            }
+            horasTrabajadasPorDia[fechaStr].push(hora);
         });
+    
+        let diasMenosDeOchoHoras = 0;
+        for (const fecha in horasTrabajadasPorDia) {
+            const horasTrabajadas = horasTrabajadasPorDia[fecha];
+            horasTrabajadas.sort((a, b) => a - b);
+    
+            let totalHorasTrabajadas = 0;
+            for (let i = 0; i < horasTrabajadas.length; i += 2) {
+                const inicio = horasTrabajadas[i];
+                const fin = horasTrabajadas[i + 1];
+                if (fin) {
+                    const duracion = (fin - inicio) / (1000 * 60 * 60);
+                    totalHorasTrabajadas += duracion;
+                }
+            }
+            if (totalHorasTrabajadas < 8) {
+                diasMenosDeOchoHoras++;
+            }
+        }
 
-        setDiasTrabajados(diasTrabajadosSet.size);
+
+        let horasExtras = 0;
+        for (const fecha in horasTrabajadasPorDia) {
+            const horasTrabajadas = horasTrabajadasPorDia[fecha];
+            horasTrabajadas.sort((a, b) => a - b);
+
+            let totalHorasTrabajadas = 0;
+            for (let i = 0; i < horasTrabajadas.length; i += 2) {
+                const inicio = horasTrabajadas[i];
+                const fin = horasTrabajadas[i + 1];
+                if (fin) {
+                    const duracion = (fin - inicio) / (1000 * 60 * 60);
+                    totalHorasTrabajadas += duracion;
+                }
+            }
+            if (totalHorasTrabajadas > 8) {
+                horasExtras+= totalHorasTrabajadas - 8;
+            }
+            
+
+        }
+    
+        setDiasTrabajados(Object.keys(horasTrabajadasPorDia).length);
+        setDiasMenosDeOchoHoras(diasMenosDeOchoHoras);
+        sethorasExtras(horasExtras);
+
     }, [marcaciones]);
+    
+        
 
     const searchUser = () => {
         searchUserByRut(rut).then(response => {
@@ -46,7 +101,7 @@ const DiasTrabajadosReporte = () => {
             {usuario ? (
                 <div>
                     <h2>Reporte de días trabajados</h2>
-                    <p>Has trabajado {diasTrabajados} días desde tu fecha de contratación ({usuario.fecha_contratacion}).</p>
+                    <p>{usuario.nombre} {usuario.apellido_paterno} trabajó {diasTrabajados} días desde su fecha de contratación ({usuario.fecha_contratacion}), con un total de {diasMenosDeOchoHoras} días en los cuales trabajó menos de 8 horas y trabajó un total de {horasExtras} horas extras.</p>
                 </div>
             ) : (
                 <p>No se encontró un usuario con el RUT ingresado.</p>

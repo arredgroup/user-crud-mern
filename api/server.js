@@ -26,10 +26,10 @@ db.mongoose
     });
 
 var corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
+  origin: "http://localhost"
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 
 // parse requests of content-type - application/json
