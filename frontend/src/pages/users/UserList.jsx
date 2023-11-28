@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsers } from "../../services/user.service";
+import { getReportData } from '../../services/check.service';
 import ModalDelete from "../../components/modalDelete/modalDelete";
 import ModalEdit from "../../components/modalEdit/modalEdit";
 import ModalView from "../../components/modalView/modalView";
+import ReportModal from "../../components/modalReport/reportModal";
 
 const UserList = () => {
   const navigate = useNavigate();
@@ -16,6 +18,8 @@ const UserList = () => {
   const [showingDeleteModal, setShowingDeleteModal] = useState(false);
   const [showingUpdateModal, setShowingUpdateModal] = useState(false);
   const [showingViewModal, setShowingViewModal] = useState(false);
+  const [reportData, setReportData] = useState(null);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -45,6 +49,13 @@ const UserList = () => {
   const handleViewUser = (user) => {
     setUserToView(user);
     setShowingViewModal(true);
+  };
+
+  const handleReport = (rut) => {
+    getReportData(rut).then((data) => {
+      setReportData(data);
+      setShowReportModal(true);
+    });
   };
 
   return (
@@ -92,6 +103,12 @@ const UserList = () => {
                 >
                   <i className="bi bi-trash"></i>
                 </button>
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => handleReport(user.rut)}
+                >
+                  <i className="bi bi-graph-up"></i>
+                </button>
               </td>
             </tr>
           ))}
@@ -111,6 +128,11 @@ const UserList = () => {
         user={userToView}
         showingModal={showingViewModal}
         closeModal={() => setShowingViewModal(false)}
+      />
+      <ReportModal
+        data={reportData}
+        showingModal={showReportModal}
+        closeModal={() => setShowReportModal(false)}
       />
     </div>
   );
