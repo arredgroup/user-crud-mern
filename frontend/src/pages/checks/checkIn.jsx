@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState} from 'react';
 import {Button, Table} from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut, deleteCheck } from '../../services/check.service';

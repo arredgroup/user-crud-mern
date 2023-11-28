@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Button, Table} from "react-bootstrap";
-import { searchUserByRut } from '../../services/user.service';
+import {searchUserByRut } from '../../services/user.service';
 import {searchCheckByRut} from '../../services/check.service';
+import ModalReport from '../../components/modalReport/modalReport';
 
 const DiasTrabajadosReporte = () => {
     const [usuario, setUsuario] = useState(null);
@@ -10,6 +11,7 @@ const DiasTrabajadosReporte = () => {
     const [diasMenosDeOchoHoras, setDiasMenosDeOchoHoras] = useState(0);
     const [horasExtras, sethorasExtras] = useState(0);
     const [marcaciones, setMarcaciones] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         if (usuario) {
@@ -100,8 +102,35 @@ const DiasTrabajadosReporte = () => {
             </div>
             {usuario ? (
                 <div>
-                    <h2>Reporte de días trabajados</h2>
+                    <h2>Usuario</h2>
                     <p>{usuario.nombre} {usuario.apellido_paterno} trabajó {diasTrabajados} días desde su fecha de contratación ({usuario.fecha_contratacion}), con un total de {diasMenosDeOchoHoras} días en los cuales trabajó menos de 8 horas y trabajó un total de {horasExtras} horas extras.</p>
+                    <Table>
+                        <tr>
+                            <th>Rut</th>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Reporte Laboral</th>
+                        </tr>
+                        <tr>
+                                <td>{usuario.rut}</td>
+                                <td>{usuario.nombre}</td>
+                                <td>{usuario.apellido_paterno}</td>
+                                <td>{usuario.apellido_materno}</td>
+
+                                <td>
+                                    <button className="btn btn-primary" onClick={() => setShowModal(true)}>Ver Reporte</button>
+                                </td>
+                        </tr>
+                        <ModalReport
+                            user={usuario}
+                            diasTrabajados={diasTrabajados}
+                            diasMenosDeOchoHoras={diasMenosDeOchoHoras}
+                            horasExtras={horasExtras}
+                            showingModal={showModal}
+                            closeModal={() => setShowModal(false)}
+                        />
+                    </Table>
                 </div>
             ) : (
                 <p>No se encontró un usuario con el RUT ingresado.</p>
