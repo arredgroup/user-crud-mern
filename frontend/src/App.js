@@ -7,6 +7,7 @@ import UserCreate from "./pages/users/UserCreate";
 import CheckIn from "./pages/checks/checkIn";
 import "./styles/main.css";
 import Report from "./pages/Reports/report";
+import "./styles/report.css";
 
 export default function App() {
     return (

@@ -90,12 +90,14 @@ function Report() {
     }, [marcaciones]);
 
     return (
-        <div>
+        <div className='text-center'>
             <h1>Prueba pagina reportes</h1>
             <div className="form-group">
-                <label>Rut</label>
-                <input type="text" className="form-control" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />
+
+                <label className='bold-text'>Rut: </label>
+                <input type="text" className="form-control bold-text" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />
                 <Button variant="primary" onClick={() => searchUser()}>Buscar</Button>
+
             </div>
 
             {usuario ?
@@ -103,7 +105,7 @@ function Report() {
                 <div className='text-center'>
                     <h2>Usuario: {nombreCompleto} </h2>
                     <div className='d-flex justify-content-center'>
-                        <Table striped bordered hover className="w-50 table-sm  text-center rounded mt-4">
+                        <Table id="Tabla_report" striped bordered hover className="w-50 table-sm  text-center rounded mt-4">
 
                             <tr>
                                 <th>Días trabajados:</th>

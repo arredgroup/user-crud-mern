@@ -1,0 +1,18 @@
+/* Marcar en negrita la información dentro del imput*/
+.bold-text {
+    font-weight: bold;
+}
+
+
+
+/* Modificar un poco el tamaño de la tabla de reportes*/
+
+#Tabla_report th {
+    text-align: left;
+    width: 300px;
+}
+
+#Tabla_report td {
+    text-align: center;
+    width: 40px;
+}
