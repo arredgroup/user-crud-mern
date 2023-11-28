@@ -26,7 +26,7 @@ db.mongoose
     });
 
 
-    // Me da un error de corsOptions, por lo que lo deshabilito
+    // Me da un error de corsOptions, por lo que lo comento
 // var corsOptions = {
 //   origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
 // };
