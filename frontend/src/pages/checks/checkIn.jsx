@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Button, Table} from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut, deleteCheck } from '../../services/check.service';
 import ModalMarcacion from "../../components/modalMarcacion/modalMarcacion";
@@ -62,8 +62,8 @@ const CheckIn = () => {
                         <td>{usuario.fecha_contratacion}</td>
                     </tr>
                 </Table>
-            </div> : <h2>Sin Resultados</h2> }
-            {marcaciones.length!==0 ? <div>
+            </div> : <h2>Sin Resultados</h2>}
+            {marcaciones.length !== 0 ? <div>
                 <h2>Marcaciones <Button variant="success" onClick={() => processCheckIn()}>Marcar</Button></h2>
                 <Table>
                     <tr>
@@ -77,12 +77,12 @@ const CheckIn = () => {
                             <td>{marcacion.fecha}</td>
                             <td>{marcacion.hora}</td>
                             <td>{marcacion.tipo}</td>
-                            <td><Button className={"btn btn-outline-danger"} onClick={()=>handleDelete(marcacion)}><i className="bi bi-trash"></i></Button></td>
+                            <td><Button className={"btn btn-outline-danger"} onClick={() => handleDelete(marcacion)}><i className="bi bi-trash"></i></Button></td>
                         </tr>
                     ))}
                 </Table>
-            </div> : <h2>Sin Marcaciones {usuario ?<Button variant="success" onClick={() => processCheckIn()}>Marcar</Button> : null}</h2>}
-            <ModalMarcacion fecha={fecha} user={usuario} showingModal={showModal} closeModal={() => setShowModal(false)}/>
+            </div> : <h2>Sin Marcaciones {usuario ? <Button variant="success" onClick={() => processCheckIn()}>Marcar</Button> : null}</h2>}
+            <ModalMarcacion fecha={fecha} user={usuario} showingModal={showModal} closeModal={() => setShowModal(false)} />
         </div>
     )
 }
