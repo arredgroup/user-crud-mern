@@ -28,33 +28,28 @@ const Reports = () => {
         }
     }
 
-    const calcularHorasTrabajadas = (marcaciones) => {
-        let horasTrabajadas = 0;
-
-        for (let i = 0; i < marcaciones.length; i += 2) {
-            // Asegurarse de tener al menos una entrada y salida para calcular las horas trabajadas
-            if (i + 1 < marcaciones.length) {
-                const entrada = new Date(marcaciones[i].fecha + ' ' + marcaciones[i].hora);
-                const salida = new Date(marcaciones[i + 1].fecha + ' ' + marcaciones[i + 1].hora);
-
-                // Calcular la diferencia en milisegundos y convertirla a horas
-                const diferenciaHoras = (salida - entrada) / (1000 * 60 * 60);
-                horasTrabajadas += diferenciaHoras;
-            }
-        }
-
-        return horasTrabajadas;
-    }
-
     const calcularDiasTrabajados = (marcaciones) => {
         const fechasUnicas = new Set();
-
         for (let i = 0; i < marcaciones.length; i++) {
             const fecha = marcaciones[i].fecha;
             fechasUnicas.add(fecha);
         }
-
         return fechasUnicas.size;
+    }
+
+    const calcularMenos8 = (marcaciones) => {
+        let diasMenos8 = 0;
+        for (let i = 0; i < marcaciones.length; i += 2) {
+            if (i + 1 < marcaciones.length) {
+                const entrada = new Date(marcaciones[i].fecha + ' ' + marcaciones[i].hora);
+                const salida = new Date(marcaciones[i + 1].fecha + ' ' + marcaciones[i + 1].hora);
+                const diferenciaHoras = (salida - entrada) / (1000 * 60 * 60);
+                if (diferenciaHoras <= 8) {
+                    diasMenos8++;
+                }
+            }
+        }
+        return diasMenos8;
     }
 
     return (
@@ -90,11 +85,11 @@ const Reports = () => {
                 </Table>
             </div> : <h2>Sin Resultados</h2> }
             {marcaciones.length!==0 ? <div>
-                <div className="horas-trabajadas">
-                    <p>Horas Trabajadas: {calcularHorasTrabajadas(marcaciones)} horas</p>
+                <div className="reporte">
+                    <p>Días trabajados: {calcularDiasTrabajados(marcaciones)}</p>
                 </div>
-                <div className="dias-trabajados">
-                    <p>Días Trabajados: {calcularDiasTrabajados(marcaciones)}</p>
+                <div className="dias-menos-o-igual-a-8-horas">
+                    <p>Días trabajados menos de 8 horas: {calcularMenos8(marcaciones)}</p>
                 </div>
             </div> : <h2> </h2>}
             <ModalMarcacion fecha={fecha} user={usuario} showingModal={showModal} closeModal={() => setShowModal(false)}/>
