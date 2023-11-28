@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button } from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut } from '../../services/check.service';
-import { differenceInHours } from 'date-fns';
 
 const Reports = () => {
     const [rut, setRut] = useState('');
@@ -34,7 +33,6 @@ const Reports = () => {
             return acc;
         }, {});
 
-        // TODO: Arreglar esto
         Object.keys(grouped).forEach(date => {
             const entradas = grouped[date].entradas.sort((a, b) => new Date(`1970-01-01T${a.hora}Z`) - new Date(`1970-01-01T${b.hora}Z`));
             const salidas = grouped[date].salidas.sort((a, b) => new Date(`1970-01-01T${a.hora}Z`) - new Date(`1970-01-01T${b.hora}Z`));
@@ -42,7 +40,7 @@ const Reports = () => {
             for (let i = 0; i < entradas.length && i < salidas.length; i++) {
                 const entrada = new Date(`1970-01-01T${entradas[i].hora}Z`);
                 const salida = new Date(`1970-01-01T${salidas[i].hora}Z`);
-                const hours = differenceInHours(salida, entrada);
+                const hours = (salida - entrada) / 1000 / 60 / 60;
                 totalHours += hours;
             }
             if (totalHours < 8) {
