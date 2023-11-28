@@ -4,6 +4,7 @@ import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut } from '../../services/check.service';
 import { useNavigate } from 'react-router-dom';
 import ModalMarcacion from "../../components/modalMarcacion/modalMarcacion";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 
 const Reports = () => {
@@ -70,6 +71,12 @@ const Reports = () => {
         return horasExtras;
     }
 
+    const data = [
+        { name: 'Días trabajados', value: calcularDiasTrabajados(marcaciones) },
+        { name: 'Días menos de 8 horas', value: calcularMenos8(marcaciones) },
+        { name: 'Horas extras', value: calcularHorasExtras(marcaciones) },
+      ]
+
     return (
         <div>
             <h1>
@@ -103,14 +110,18 @@ const Reports = () => {
                 </Table>
             </div> : <h2>Sin Resultados</h2> }
             {marcaciones.length!==0 ? <div>
-                <div className="reporte">
-                    <p>Días trabajados: {calcularDiasTrabajados(marcaciones)}</p>
+                <div>
+                    <h2>Reporte</h2>
                 </div>
-                <div className="dias-menos-o-igual-a-8-horas">
-                    <p>Días trabajados menos de 8 horas: {calcularMenos8(marcaciones)}</p>
-                </div>
-                <div className="horas-extras">
-                    <p>Horas extras: {calcularHorasExtras(marcaciones)}</p>
+                <div>
+                    <BarChart width={600} height={400} data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#17a2b8" />
+                    </BarChart>
                 </div>
             </div> : <h2> </h2>}
             <ModalMarcacion fecha={fecha} user={usuario} showingModal={showModal} closeModal={() => setShowModal(false)}/>
