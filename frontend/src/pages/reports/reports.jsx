@@ -62,9 +62,8 @@ const Reports = () => {
                 const salida = new Date(marcaciones[i + 1].fecha + ' ' + marcaciones[i + 1].hora);
                 const diferenciaMilisegundos = salida - entrada;
                 const horas = Math.floor(diferenciaMilisegundos / (1000 * 60 * 60));
-                const minutos = Math.floor((diferenciaMilisegundos % (1000 * 60 * 60)) / (1000 * 60));
                 if (diferenciaMilisegundos > 8 * 60 * 60 * 1000) {
-                    horasExtras += horas + minutos / 60;
+                    horasExtras += Math.floor(horas);
                 }
             }
         }
