@@ -20,7 +20,7 @@ const UserCreate = () => {
     const handleSubmit = () => {
         setLoading(true);
         setSuccess(false);
-        if(!checkFormValues()) {
+        if (!checkFormValues()) {
             setLoading(false);
             return;
         }
@@ -83,9 +83,9 @@ const UserCreate = () => {
     return (
         <div>
             <h1>Crear Usuario</h1>
-            { alertMessage!==''? <div className="alert alert-warning alert-dismissible fade show" role="alert">
+            {alertMessage !== '' ? <div className="alert alert-warning alert-dismissible fade show" role="alert">
                 {alertMessage}
-                <button type="button" className="btn btn-link bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={()=>setAlertMessage('')}></button>
+                <button type="button" className="btn btn-link bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={() => setAlertMessage('')}></button>
             </div> : null}
             <div>
                 <div className="form-group">
@@ -114,16 +114,16 @@ const UserCreate = () => {
                 </div>
                 <button type="button" className="btn btn-primary" onClick={handleSubmit}>Crear</button>
             </div>
-            { loading?
+            {loading ?
                 <div className="spinner-border" role="status">
                     <span className="sr-only">Loading...</span>
                 </div>
-                : null }
-            { success?
+                : null}
+            {success ?
                 <div className="alert alert-success alert-dismissible fade show" role="alert">
                     Usuario Creado Correctamente
-                    <button type="button" className="btn btn-link bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={()=>setSuccess(false)}></button>
-                </div> : null }
+                    <button type="button" className="btn btn-link bi bi-x" data-bs-dismiss="alert" aria-label="Close" onClick={() => setSuccess(false)}></button>
+                </div> : null}
         </div>
     );
 }

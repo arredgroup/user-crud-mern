@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut } from '../../services/check.service';
 
@@ -8,6 +8,7 @@ import { searchCheckByRut } from '../../services/check.service';
 function Report() {
     const [rut, setRut] = useState('');
     const [usuario, setUsuario] = useState(null);
+    const [nombreCompleto, setNombreCompleto] = useState("");
 
     // Varaibles m.D
     const [marcaciones, setMarcaciones] = useState([]);
@@ -18,6 +19,7 @@ function Report() {
     const searchUser = () => {
         searchUserByRut(rut).then(response => {
             setUsuario(response.data);
+            setNombreCompleto((response.data.nombre) + " " + (response.data.apellido_paterno) + " " + (response.data.apellido_materno));
         });
         searchCheckByRut(rut).then(response => {
             setMarcaciones(response.data);
@@ -80,7 +82,7 @@ function Report() {
         }, {});
 
         const horasExtras = Object.values(horasPorFecha).reduce((total, time) => {
-            const horas = time / (60 * 60 * 1000);
+            const horas = time / (1000 * 60 * 60);
             return total + Math.max(0, horas - 8);
         }, 0);
 
@@ -97,11 +99,29 @@ function Report() {
             </div>
 
             {usuario ?
-                <div>
-                    <h1>Días trabajados: {diasTrabajados} </h1>
-                    <h2>Días trabajados menos de 8 horas: {Dias8Horas}</h2>
-                    <h2>Horas extras: {horasExtras}</h2>
-                </div> : <h2>Sin Resultados</h2>}
+
+                <div className='text-center'>
+                    <h2>Usuario: {nombreCompleto} </h2>
+                    <div className='d-flex justify-content-center'>
+                        <Table striped bordered hover className="w-50 table-sm  text-center rounded mt-4">
+
+                            <tr>
+                                <th>Días trabajados:</th>
+                                <td>{diasTrabajados}</td>
+                            </tr>
+                            <tr>
+                                <th>Días trabajados menos de 8 horas:</th>
+                                <td>{Dias8Horas}</td>
+                            </tr>
+                            <tr>
+                                <th>Horas extras:</th>
+                                <td>{horasExtras}</td>
+                            </tr>
+
+                        </Table>
+                    </div>
+                </div>
+                : <h2>Sin Resultados</h2>}
         </div>
     );
 }
