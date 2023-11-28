@@ -5,6 +5,7 @@ import { searchCheckByRut } from '../../services/check.service';
 import { useNavigate } from 'react-router-dom';
 import ModalMarcacion from "../../components/modalMarcacion/modalMarcacion";
 
+
 const Reports = () => {
     const navigate = useNavigate();
     const [rut, setRut] = useState('');
@@ -52,6 +53,23 @@ const Reports = () => {
         return diasMenos8;
     }
 
+    const calcularHorasExtras = (marcaciones) => {
+        let horasExtras = 0;
+        for (let i = 0; i < marcaciones.length; i += 2) {
+            if (i + 1 < marcaciones.length) {
+                const entrada = new Date(marcaciones[i].fecha + ' ' + marcaciones[i].hora);
+                const salida = new Date(marcaciones[i + 1].fecha + ' ' + marcaciones[i + 1].hora);
+                const diferenciaMilisegundos = salida - entrada;
+                const horas = Math.floor(diferenciaMilisegundos / (1000 * 60 * 60));
+                const minutos = Math.floor((diferenciaMilisegundos % (1000 * 60 * 60)) / (1000 * 60));
+                if (diferenciaMilisegundos > 8 * 60 * 60 * 1000) {
+                    horasExtras += horas + minutos / 60;
+                }
+            }
+        }
+        return horasExtras;
+    }
+
     return (
         <div>
             <h1>
@@ -90,6 +108,9 @@ const Reports = () => {
                 </div>
                 <div className="dias-menos-o-igual-a-8-horas">
                     <p>Días trabajados menos de 8 horas: {calcularMenos8(marcaciones)}</p>
+                </div>
+                <div className="horas-extras">
+                    <p>Horas extras: {calcularHorasExtras(marcaciones)}</p>
                 </div>
             </div> : <h2> </h2>}
             <ModalMarcacion fecha={fecha} user={usuario} showingModal={showModal} closeModal={() => setShowModal(false)}/>
