@@ -17,7 +17,9 @@ const Reports = () => {
         });
     }
 
+    let diasTrabajados = 0;
     let diasMenosDeOchoHoras = 0;
+    let horasExtras = 0;
 
     if (marcaciones) {
         const grouped = marcaciones.reduce((acc, curr) => {
@@ -42,9 +44,21 @@ const Reports = () => {
                 const salida = new Date(`1970-01-01T${salidas[i].hora}Z`);
                 const hours = (salida - entrada) / 1000 / 60 / 60;
                 totalHours += hours;
+                // Contar las horas extras trabajadas
+                if (hours > 8) {
+                    horasExtras += hours - 8;
+                }
             }
             if (totalHours < 8) {
                 diasMenosDeOchoHoras++;
+            }
+        });
+
+        Object.keys(grouped).forEach(date => {
+            const entradas = grouped[date].entradas;
+            const salidas = grouped[date].salidas;
+            if (entradas.length === 1 && salidas.length === 1) {
+                diasTrabajados++;
             }
         });
     }
@@ -64,10 +78,9 @@ const Reports = () => {
                 marcaciones.length > 0 ? (
                     <>
                         <p>{`Fecha de contratacion: ${usuario.fecha_contratacion}`}</p>
-                        <p>{`Total de marcaciones: ${marcaciones.length}`}</p>
-                        <p>{`Total de entradas: ${entradas}`}</p>
-                        <p>{`Total de salidas: ${salidas}`}</p>
                         <p>{`Días trabajados menos de 8 horas: ${diasMenosDeOchoHoras}`}</p>
+                        <p>{`Cantidad de días trabajados: ${diasTrabajados}`}</p>
+                        <p>{`Cantidad de horas extras total: ${horasExtras}`}</p>
                     </>
             ) : (
                     <p>Sin marcaciones</p>
