@@ -91,7 +91,7 @@ function Report() {
 
     return (
         <div className='text-center'>
-            <h1>Prueba pagina reportes</h1>
+
             <div className="form-group">
 
                 <label className='bold-text'>Rut: </label>
