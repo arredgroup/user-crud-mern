@@ -3,27 +3,53 @@ import {Button, Table} from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut, deleteCheck } from '../../services/check.service';
 import ModalMarcacion from "../../components/modalMarcacion/modalMarcacion";
+import ReportView from '../../components/reportView/reportView';
+import ErrorComponent from '../../components/error/errorComponent';
 
 const CheckIn = () => {
 
     const [rut, setRut] = useState('');
     const [usuario, setUsuario] = useState(null);
+    const [userToView, setUserToView] = useState(false);
     const [marcaciones, setMarcaciones] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [fecha, setFecha] = useState(null);
+    const [showingViewReport, setShowingViewReport] = useState(false);
 
     const searchUser = () => {
-        searchUserByRut(rut).then(response => {
-            setUsuario(response.data);
-        });
-        searchCheckByRut(rut).then(response => {
-            setMarcaciones(response.data);
-        });
+        searchUserByRut(rut)
+            .then(response => {
+                if (!response.data) {
+                    throw new Error('No se encontró el usuario');
+                }
+                setUsuario(response.data);
+            })
+            .catch(error => {
+                setError(`Ocurrió un error al buscar los datos: ${error.message}`);
+            });
+
+        searchCheckByRut(rut)
+            .then(response => {
+                if (!response.data || response.data.length === 0) {
+                    throw new Error('No se encontraron marcaciones');
+                }
+                setMarcaciones(response.data);
+            })
+            .catch(error => {
+                setError(`Ocurrió un error al buscar los datos: ${error.message}`);
+            });
     }
+    
+    
 
     const processCheckIn = () => {
         setFecha(new Date());
         setShowModal(true);
+    }
+
+    const handleViewUser = (usuario) => {
+        setUserToView(usuario);
+        setShowingViewReport(true);
     }
 
     const handleDelete = (check) => {
@@ -41,6 +67,7 @@ const CheckIn = () => {
                 <label>Rut</label>
                 <input type="text" className="form-control" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />
                 <Button variant="primary" onClick={() => searchUser()}>Buscar</Button>
+                <ErrorComponent message={error} />
             </div>
             {usuario ? <div>
                 <h2>Usuario</h2>
@@ -52,6 +79,7 @@ const CheckIn = () => {
                         <th>Apellido Materno</th>
                         <th>Fecha Nacimiento</th>
                         <th>Fecha Contratación</th>
+                        <th>Acciones</th>
                     </tr>
                     <tr>
                         <td>{usuario.rut}</td>
@@ -60,9 +88,11 @@ const CheckIn = () => {
                         <td>{usuario.apellido_materno}</td>
                         <td>{usuario.fecha_nacimiento}</td>
                         <td>{usuario.fecha_contratacion}</td>
+                        <td><Button className="btn btn-outline-info" onClick={() => handleViewUser(usuario)}><i className="bi bi-eye"></i></Button>
+                        </td> 
                     </tr>
                 </Table>
-            </div> : <h2>Sin Resultados</h2> }
+            </div> : null}
             {marcaciones.length!==0 ? <div>
                 <h2>Marcaciones <Button variant="success" onClick={() => processCheckIn()}>Marcar</Button></h2>
                 <Table>
@@ -83,6 +113,11 @@ const CheckIn = () => {
                 </Table>
             </div> : <h2>Sin Marcaciones {usuario ?<Button variant="success" onClick={() => processCheckIn()}>Marcar</Button> : null}</h2>}
             <ModalMarcacion fecha={fecha} user={usuario} showingModal={showModal} closeModal={() => setShowModal(false)}/>
+            <ReportView
+                usuario={userToView}
+                showingReport={showingViewReport}
+                closeReport={() => setShowingViewReport(false)}
+            />
         </div>
     )
 }
