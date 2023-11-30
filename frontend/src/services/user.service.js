@@ -28,8 +28,6 @@ const searchUserByRut = async (rut) => {
     return await instance.get(`/user/search/rut/${rut}`);
 }
 
-
-
 export {
     getUsers,
     createUsers,

@@ -21,13 +21,9 @@ const deleteCheck = async (check) => {
     return await instance.delete(`check/${check.rut}?fecha=${check.fecha}&hora=${check.hora}`);
 }
 
-const getReportData = async (rut) => {
-    const response = await instance.get(`/check/report/${rut}`);
-    return response.data;
-}
+
 export {
     createCheck,
     searchCheckByRut,
     deleteCheck,
-    getReportData,
 }
