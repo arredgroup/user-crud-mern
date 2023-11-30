@@ -9,6 +9,7 @@ const Report = () => {
     const [usuario, setUsuario] = useState(null);
     const [marcaciones, setMarcaciones] = useState([]);
     const [menos8Horas, setMenos8Horas] = useState(0);
+    const [horasExtras, setHorasExtras] = useState(0);
 
     const searchUser = () => {
         searchUserByRut(rut).then(response => {
@@ -51,7 +52,16 @@ const Report = () => {
     
         const menos8Horas = Object.values(horasPorFecha).filter(horas => horas < 8).length;
         setMenos8Horas(menos8Horas);
-
+      
+        const horasExtras = Object.values(horasPorFecha).reduce((total, horas) => {
+            if (horas > 8) {
+                return total + (horas - 8);
+            }
+            return total;
+        }, 0);
+    
+        setHorasExtras(horasExtras);
+    
     }, [marcaciones]);
 
     return (
@@ -66,6 +76,7 @@ const Report = () => {
                         <h1>Reporte</h1>
                         <p>Días trabajados: {diasTrabajados}</p>
                         <p>Dias en que trabajó menos de ocho horas: {menos8Horas}</p>
+                        <p>Horas extras trabajadas: {horasExtras}</p>
                     </div>
                     : <h2>Sin Resultados</h2>
                 }
