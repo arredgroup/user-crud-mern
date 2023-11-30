@@ -19,6 +19,11 @@ const UserCreate = () => {
 
     const [loading, setLoading] = useState(false);
 
+    const handlePages = (page) => {
+        if(page === "userlist") {
+            navigate("/");
+        }
+    }
     const handleSubmit = () => {
         setLoading(true);
         setSuccess(false);
