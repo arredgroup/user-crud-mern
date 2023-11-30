@@ -138,8 +138,10 @@ const CheckIn = () => {
             <h1>Check In</h1>
             <div className="form-group">
                 <label>Rut</label>
-                <input type="text" className="form-control" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />
-                <Button variant="primary" onClick={() => searchUser()}>Buscar</Button>
+                <div className="input-group mb-3 display:flex " >
+                    <input type="text" className="form-control" placeholder="22222222-2" style={{maxWidth: '600px'}} value={rut} onChange={e => setRut(e.target.value)} />
+                    <Button variant="primary" style={{marginLeft: '5px'}} onClick={() => searchUser()}>Buscar</Button>
+                <div/>
                 {error && <ErrorComponent message={error} />}
             </div>
             {usuario ? <div>
@@ -161,7 +163,7 @@ const CheckIn = () => {
                         <td>{usuario.apellido_materno}</td>
                         <td>{usuario.fecha_nacimiento}</td>
                         <td>{usuario.fecha_contratacion}</td>
-                        <td><Button className="btn btn-outline-info" onClick={() => handleViewUser(usuario)}><i className="bi bi-eye"></i></Button>
+                        <td><Button className="btn btn-outline-info text-light" onClick={() => handleViewUser(usuario)}><i className="bi bi-eye" ></i></Button>
                         </td> 
                     </tr>
                 </Table>
@@ -180,7 +182,7 @@ const CheckIn = () => {
                             <td>{marcacion.fecha}</td>
                             <td>{marcacion.hora}</td>
                             <td>{marcacion.tipo}</td>
-                            <td><Button className={"btn btn-outline-danger"} onClick={()=>handleDelete(marcacion)}><i className="bi bi-trash"></i></Button></td>
+                            <td><Button className={"btn-danger"} onClick={()=>handleDelete(marcacion)}><i className="bi bi-trash"></i></Button></td>
                         </tr>
                     ))}
                 </Table>
@@ -195,7 +197,7 @@ const CheckIn = () => {
                 closeReport={() => setShowingViewReport(false)}
             />
         </div>
-    )
+    </div>)
 }
 
 export default CheckIn;
