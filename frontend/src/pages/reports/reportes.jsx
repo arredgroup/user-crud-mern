@@ -9,21 +9,21 @@ const Reportes = () => {
     const [rut, setRut] = useState('');
     const [usuario, setUsuario] = useState(null);
     const [marcaciones, setMarcaciones] = useState([]);
-    
+
     const searchUser = () => {
         searchUserByRut(rut).then(response => {
             setUsuario(response.data); 
-        });
+        })
         searchCheckByRut(rut).then(response => {
             setMarcaciones(response.data);
-        });
-    };
+        })
+    }
 
     const handlePages = (page) => {
         if(page === "checkin") {
             navigate("/checkin");
         }
-    };
+    }
     const calcularDiasTrabajados = (marcaciones) => {
         const fechasUnicas = new Set();
         for (let i = 0; i < marcaciones.length; i++) {
@@ -31,8 +31,21 @@ const Reportes = () => {
             fechasUnicas.add(fecha);
         }
         return fechasUnicas.size;
-    };
-
+    }
+    const calcular8 = (marcaciones) => {
+        let diasMenos8 = 0;
+        for (let i = 0; i < marcaciones.length; i += 2) {
+            if (i + 1 < marcaciones.length) {
+                const entrada = new Date(marcaciones[i].fecha + ' ' + marcaciones[i].hora).getTime();
+                const salida = new Date(marcaciones[i + 1].fecha + ' ' + marcaciones[i + 1].hora).getTime();
+                const diferenciaHoras = (salida - entrada) / (1000 * 60 * 60);
+                if (diferenciaHoras < 8) {
+                    diasMenos8++;
+                }
+            }
+        }
+        return diasMenos8;
+    }
     return (
         <div>
             <h1>
@@ -65,19 +78,21 @@ const Reportes = () => {
                             <td>{usuario.fecha_contratacion}</td>
                         </tr>
                     </Table>
-                    <h2>Reportes</h2>
+                    <h2>Reportes del Trabajador </h2>
                     <Table>
                         <tr>
                             <th>Total de Días Trabajados</th>
+                            <th>Total de Días en los que se Trabajó Menos de 8 Horas</th>
                         </tr>
                         <tr>
                             <td>{calcularDiasTrabajados(marcaciones)}</td>
+                            <td>{calcular8(marcaciones)}</td>
                         </tr>
                     </Table>
                 </div>
             ) : null}
         </div>
-    );
-};
+    )
+}
 
 export default Reportes;
