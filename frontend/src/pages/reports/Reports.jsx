@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut } from '../../services/check.service';
 
@@ -21,6 +21,7 @@ const Reports = () => {
     let diasMenosDeOchoHoras = 0;
     let horasExtras = 0;
 
+    // Agrupar las marcaciones por fecha
     if (marcaciones) {
         const grouped = marcaciones.reduce((acc, curr) => {
             const date = curr.fecha;
@@ -35,6 +36,8 @@ const Reports = () => {
             return acc;
         }, {});
 
+        // Recorrer los grupos de marcaciones por fecha
+        // y calcular las horas trabajadas por día
         Object.keys(grouped).forEach(date => {
             const entradas = grouped[date].entradas.sort((a, b) => new Date(`1970-01-01T${a.hora}Z`) - new Date(`1970-01-01T${b.hora}Z`));
             const salidas = grouped[date].salidas.sort((a, b) => new Date(`1970-01-01T${a.hora}Z`) - new Date(`1970-01-01T${b.hora}Z`));
@@ -54,6 +57,8 @@ const Reports = () => {
             }
         });
 
+        // Recorrer los grupos de marcaciones por fecha
+        // y contar los días que trabajó
         Object.keys(grouped).forEach(date => {
             const entradas = grouped[date].entradas;
             const salidas = grouped[date].salidas;
@@ -63,8 +68,8 @@ const Reports = () => {
         });
     }
 
-    const entradas = marcaciones ? marcaciones.filter(marcacion => marcacion.tipo == 1).length : 0;
-    const salidas = marcaciones ? marcaciones.filter(marcacion => marcacion.tipo == 2).length : 0;
+    //const entradas = marcaciones ? marcaciones.filter(marcacion => marcacion.tipo == 1).length : 0;
+    //const salidas = marcaciones ? marcaciones.filter(marcacion => marcacion.tipo == 2).length : 0;
 
     return (
         <div>
@@ -76,14 +81,30 @@ const Reports = () => {
             </div>
             {marcaciones && usuario && (
                 marcaciones.length > 0 ? (
-                    <>
-                        <p>{`Fecha de contratacion: ${usuario.fecha_contratacion}`}</p>
-                        <p>{`Días trabajados menos de 8 horas: ${diasMenosDeOchoHoras}`}</p>
-                        <p>{`Cantidad de días trabajados: ${diasTrabajados}`}</p>
-                        <p>{`Cantidad de horas extras total: ${horasExtras}`}</p>
-                    </>
+                    <div>
+                        <Table>
+                            <tr>
+                                <th>Rut</th>
+                                <th>Nombre</th>
+                                <th>Fecha contratación</th>
+                                <th>Cantidad de días trabajados</th>
+                                <th>Días trabajados menos de 8 horas</th>
+                                <th>Cantidad de horas extras total</th>
+                            </tr>
+                            <tr>
+                                <td>{usuario.rut}</td>
+                                <td>{usuario.nombre} {usuario.apellido_paterno}</td>
+                                <td>{usuario.fecha_contratacion}</td>
+                                <td>{diasTrabajados}</td>
+                                <td>{diasMenosDeOchoHoras}</td>
+                                <td>{horasExtras}</td>
+                            </tr>
+                        </Table>
+                    </div>
             ) : (
-                    <p>Sin marcaciones</p>
+                    <div>
+                        <p>Sin marcaciones</p>
+                    </div>
                 )
             )}
         </div>
