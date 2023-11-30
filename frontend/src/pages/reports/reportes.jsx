@@ -33,18 +33,33 @@ const Reportes = () => {
         return fechasUnicas.size;
     }
     const calcular8 = (marcaciones) => {
-        let diasMenos8 = 0;
+        let dias8 = 0;
         for (let i = 0; i < marcaciones.length; i += 2) {
             if (i + 1 < marcaciones.length) {
                 const entrada = new Date(marcaciones[i].fecha + ' ' + marcaciones[i].hora).getTime();
                 const salida = new Date(marcaciones[i + 1].fecha + ' ' + marcaciones[i + 1].hora).getTime();
                 const diferenciaHoras = (salida - entrada) / (1000 * 60 * 60);
                 if (diferenciaHoras < 8) {
-                    diasMenos8++;
+                    dias8++;
                 }
             }
         }
-        return diasMenos8;
+        return dias8;
+    }
+    const Calcularhorasextras = (marcaciones) => {
+        let horasExtras = 0;
+        for (let i = 0; i < marcaciones.length; i += 2) {
+            if (i + 1 < marcaciones.length) {
+                const entrada = new Date(marcaciones[i].fecha + ' ' + marcaciones[i].hora);
+                const salida = new Date(marcaciones[i + 1].fecha + ' ' + marcaciones[i + 1].hora);
+                const diferenciaMilisegundos = salida - entrada;
+                const horas = Math.floor(diferenciaMilisegundos / (1000 * 60 * 60));
+                if (horas > 8) {
+                    horasExtras += (horas - 8);
+                }
+            }
+        }
+        return horasExtras;
     }
     return (
         <div>
@@ -83,10 +98,12 @@ const Reportes = () => {
                         <tr>
                             <th>Total de Días Trabajados</th>
                             <th>Total de Días en los que se Trabajó Menos de 8 Horas</th>
+                            <th>Total de Horas Extras</th>
                         </tr>
                         <tr>
                             <td>{calcularDiasTrabajados(marcaciones)}</td>
                             <td>{calcular8(marcaciones)}</td>
+                            <td>{Calcularhorasextras(marcaciones)}</td>
                         </tr>
                     </Table>
                 </div>
