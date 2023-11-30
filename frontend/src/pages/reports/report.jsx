@@ -14,9 +14,11 @@ const Report = () => {
     const searchUser = () => {
         searchUserByRut(rut).then(response => {
             setUsuario(response.data);
+            console.log(response.data);
         });
         searchCheckByRut(rut).then(response => {
             setMarcaciones(response.data);
+            console.log(response.data);
         });
     }
 
@@ -67,13 +69,14 @@ const Report = () => {
     return (
         <div>
             <div className="form-group">
-                <label>Rut</label>
+            <h1>Pagina de pruebas de reporte de usuario</h1>
+                <label>Ingrese el rut del usuario</label>
                 <input type="text" className="form-control" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />
                 <Button variant="primary" onClick={() => searchUser()}>Buscar</Button>
             </div>{
                 usuario ?
                     <div>
-                        <h1>Reporte</h1>
+                        <h1>Reporte del trabajador: {usuario.nombre} {usuario.apellido_paterno}</h1>
                         <p>Días trabajados: {diasTrabajados}</p>
                         <p>Dias en que trabajó menos de ocho horas: {menos8Horas}</p>
                         <p>Horas extras trabajadas: {horasExtras}</p>
