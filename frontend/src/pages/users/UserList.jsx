@@ -30,6 +30,9 @@ const UserList = () => {
         if(page === "create-user") {
             navigate("/createUser");
         }
+        if(page === "checkin") {
+            navigate("/checkin");
+        }
     }
 
     const handleDeleteConfirmation = (rut) => {
@@ -49,7 +52,11 @@ const UserList = () => {
 
     return (
         <div>
-            <h1>Lista de Usuarios <button className="btn btn-outline-success" onClick={() => handlePages("create-user")}><i className="bi bi-person-plus"></i></button></h1>
+            <h1>
+            <span style={{ marginRight: '10px' }}>Lista de Usuarios</span>
+            <button className="btn btn-outline-success" style={{ marginRight: '10px' }} onClick={() => handlePages("create-user")}><i className="bi bi-person-plus"></i></button>
+            <button className="btn btn-outline-primary" style={{ marginRight: '10px' }} onClick={() => handlePages("checkin")}><i className="bi bi-check2-circle"></i></button>
+            </h1>    
             <table class="table">
                 <thead>
                     <tr>
@@ -66,9 +73,9 @@ const UserList = () => {
                             <td>{user.nombre}</td>
                             <td>{user.apellido_paterno}</td>
                             <td>
-                                <button className="btn btn-outline-info" onClick={() => handleViewUser(user)}><i className="bi bi-eye"></i></button>
-                                <button className="btn btn-outline-warning" onClick={() => handleUpdateUser(user)}><i className="bi bi-pencil"></i></button>
-                                <button className="btn btn-outline-danger" onClick={() => handleDeleteConfirmation(user.rut)}><i className="bi bi-trash"></i></button>
+                                <button className="btn btn-outline-info" style={{ marginRight: '10px' }} onClick={() => handleViewUser(user)}><i className="bi bi-eye"></i></button>
+                                <button className="btn btn-outline-warning" style={{ marginRight: '10px' }} onClick={() => handleUpdateUser(user)}><i className="bi bi-pencil"></i></button>
+                                <button className="btn btn-outline-danger"style={{ marginRight: '10px' }} onClick={() => handleDeleteConfirmation(user.rut)}><i className="bi bi-trash"></i></button>
                             </td>
                         </tr>
                         ))}
