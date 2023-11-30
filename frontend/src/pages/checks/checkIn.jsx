@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Button, Table} from "react-bootstrap";
 import { searchUserByRut } from '../../services/user.service';
 import { searchCheckByRut, deleteCheck } from '../../services/check.service';
@@ -15,6 +15,10 @@ const CheckIn = () => {
     const [showModal, setShowModal] = useState(false);
     const [fecha, setFecha] = useState(null);
     const [showingViewReport, setShowingViewReport] = useState(false);
+    const [diasTrabajados, setDiasTrabajados] = useState(0);
+    const [diasCortos, setDiasCortos] = useState(0);
+    const [horasExtras, sethorasExtras] = useState(0);
+    const [error, setError] = useState(null);
 
     const searchUser = () => {
         searchUserByRut(rut)
@@ -39,8 +43,77 @@ const CheckIn = () => {
                 setError(`Ocurrió un error al buscar los datos: ${error.message}`);
             });
     }
+
+    const contarDiasTrabajados = () => {
+        const marcacionesPorFecha = marcaciones.reduce((acc, marcacion) => {
+            const fecha = marcacion.fecha;
+            if (!acc[fecha]) {
+                acc[fecha] = [];
+            }
+            acc[fecha].push(marcacion);
+            return acc;
+        }, {});
+
+        let totalDiasTrabajados = 0;
+        for (let fecha in marcacionesPorFecha) {
+            const marcacionesDelDia = marcacionesPorFecha[fecha];
+            const tieneEntrada = marcacionesDelDia.some(marcacion => marcacion.tipo === 1);
+            const tieneSalida = marcacionesDelDia.some(marcacion => marcacion.tipo === 2);
     
+            if (tieneEntrada && tieneSalida) {
+                totalDiasTrabajados++;
+            }
+        }
+        return totalDiasTrabajados;
+    }
     
+    useEffect(() => {
+        if (usuario) {
+            searchCheckByRut(usuario.rut)
+                .then(response => {
+                    setMarcaciones(response.data);
+                    setDiasTrabajados(contarDiasTrabajados(response.data));
+                })
+                .catch(error => {
+                    setError(`Ocurrió un error al buscar los datos: ${error.message}`);
+                });
+        }
+    }, [usuario]);
+    
+    useEffect(() => {
+        const marcacionesPorFecha = marcaciones.reduce((acc, marcacion) => {
+            const fecha = marcacion.fecha;
+            if (!acc[fecha]) {
+                acc[fecha] = [];
+            }
+            acc[fecha].push(marcacion);
+            return acc;
+        }, {});
+
+        let totalHorasExtras = 0;
+        let totalDiasCortos = 0;
+    
+        for (let fecha in marcacionesPorFecha) {
+            const marcacionesDelDia = marcacionesPorFecha[fecha];
+            const entrada = marcacionesDelDia.find(marcacion => marcacion.tipo === 1);
+            const salida = marcacionesDelDia.find(marcacion => marcacion.tipo === 2);
+    
+            if (entrada && salida) {
+                const horasEntrada = parseInt(entrada.hora.split(":")[0]);
+                const horasSalida = parseInt(salida.hora.split(":")[0]);
+                const horasTrabajadas = horasSalida - horasEntrada;
+    
+                if (horasTrabajadas > 8) {
+                    totalHorasExtras += horasTrabajadas - 8;
+                } else if (horasTrabajadas <= 8) {
+                    totalDiasCortos++;
+                }
+            }
+        }
+        setDiasTrabajados(contarDiasTrabajados());
+        sethorasExtras(totalHorasExtras);
+        setDiasCortos(totalDiasCortos);
+    }, [marcaciones]);
 
     const processCheckIn = () => {
         setFecha(new Date());
@@ -67,7 +140,7 @@ const CheckIn = () => {
                 <label>Rut</label>
                 <input type="text" className="form-control" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />
                 <Button variant="primary" onClick={() => searchUser()}>Buscar</Button>
-                <ErrorComponent message={error} />
+                {error && <ErrorComponent message={error} />}
             </div>
             {usuario ? <div>
                 <h2>Usuario</h2>
@@ -115,6 +188,9 @@ const CheckIn = () => {
             <ModalMarcacion fecha={fecha} user={usuario} showingModal={showModal} closeModal={() => setShowModal(false)}/>
             <ReportView
                 usuario={userToView}
+                diasTrabajados={diasTrabajados}
+                diasCortos={diasCortos}
+                horasExtras={horasExtras}
                 showingReport={showingViewReport}
                 closeReport={() => setShowingViewReport(false)}
             />

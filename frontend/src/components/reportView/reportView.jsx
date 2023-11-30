@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import { Table } from "react-bootstrap";
 
 const ReportView = (props) => {
-    const { usuario, showingReport, closeReport } = props;
+    const { usuario, diasTrabajados, diasCortos, horasExtras, showingReport, closeReport } = props;
 
     const hideReport = () => {
         closeReport();
@@ -30,15 +30,15 @@ const ReportView = (props) => {
                     </tr>
                     <tr>
                         <th>Dias Trabajados</th>
-                        <td>{}</td>
+                        <td>{diasTrabajados}</td>
                     </tr>
                     <tr>
                         <th>Horas extras trabajadas</th>
-                        <td>{}</td>
+                        <td>{horasExtras}</td>
                     </tr>
                     <tr>
                         <th>Dias de jornada incompleta</th>
-                        <td>{}</td>
+                        <td>{diasCortos}</td>
                     </tr>
                 </Table>
             </Modal.Body>
