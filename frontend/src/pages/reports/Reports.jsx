@@ -68,9 +68,6 @@ const Reports = () => {
         });
     }
 
-    //const entradas = marcaciones ? marcaciones.filter(marcacion => marcacion.tipo == 1).length : 0;
-    //const salidas = marcaciones ? marcaciones.filter(marcacion => marcacion.tipo == 2).length : 0;
-
     return (
         <div>
             <h1>Reportes</h1>
@@ -79,34 +76,34 @@ const Reports = () => {
                 <input type="text" className="form-control" placeholder="22222222-2" value={rut} onChange={e => setRut(e.target.value)} />
                 <Button variant="primary" onClick={() => searchUser()}>Buscar</Button>
             </div>
-            {marcaciones && usuario && (
-                marcaciones.length > 0 ? (
+            {usuario ? (
+                marcaciones && marcaciones.length > 0 ? (
                     <div>
                         <Table>
-                            <tr>
-                                <th>Rut</th>
-                                <th>Nombre</th>
-                                <th>Fecha contratación</th>
-                                <th>Cantidad de días trabajados</th>
-                                <th>Días trabajados menos de 8 horas</th>
-                                <th>Cantidad de horas extras total</th>
-                            </tr>
-                            <tr>
-                                <td>{usuario.rut}</td>
-                                <td>{usuario.nombre} {usuario.apellido_paterno}</td>
-                                <td>{usuario.fecha_contratacion}</td>
-                                <td>{diasTrabajados}</td>
-                                <td>{diasMenosDeOchoHoras}</td>
-                                <td>{horasExtras}</td>
-                            </tr>
+                        <tr>
+                            <th>Rut</th>
+                            <th>Nombre</th>
+                            <th>Fecha contratación</th>
+                            <th>Cantidad de días trabajados</th>
+                            <th>Días trabajados menos de 8 horas</th>
+                            <th>Cantidad de horas extras total</th>
+                        </tr>
+                        <tr>
+                            <td>{usuario.rut}</td>
+                            <td>{usuario.nombre} {usuario.apellido_paterno}</td>
+                            <td>{usuario.fecha_contratacion}</td>
+                            <td>{diasTrabajados}</td>
+                            <td>{diasMenosDeOchoHoras}</td>
+                            <td>{horasExtras}</td>
+                        </tr>
                         </Table>
                     </div>
-            ) : (
+                ) : (
                     <div>
                         <p>Sin marcaciones</p>
                     </div>
                 )
-            )}
+            ) : null}   
         </div>
     )
 }
