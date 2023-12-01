@@ -20,18 +20,7 @@ const ModalView = (props) => {
         closeModal();
     };
 
-    const countWorkedDays = (data) => {
-        let fechas = [];
-        data.forEach((el) => {
-            if(!fechas.includes(el.fecha)){
-                fechas.push(el.fecha)
-            }
-        });
-
-        setWorkedDays(fechas.length);
-    };
-
-    const countWorkedHours = (data) => {
+    const countWorkedHoursAndDays = (data) => {
 
         let entradas = data.filter(el => el.tipo === 1);
         let dias_trabajados = []
@@ -73,8 +62,7 @@ const ModalView = (props) => {
         setWorkedDaysLess(dias_menos_trabajados.length);
         setExtraHours(horas_extra);
         setWorkedDaysData(dias_trabajados);
-
-        console.log(dias_trabajados)
+        setWorkedDays(dias_trabajados.length);
     };
 
     const localeDate = (fecha) => {
@@ -85,9 +73,7 @@ const ModalView = (props) => {
     useEffect(() => {
         if(showingModal) {
             searchCheckByRut(user.rut).then((response) => {
-                countWorkedDays(response.data);
-                countWorkedHours(response.data);
-
+                countWorkedHoursAndDays(response.data);
             }).catch((error)=>{
                 console.error(error);
             });
