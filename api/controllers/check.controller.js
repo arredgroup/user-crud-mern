@@ -44,6 +44,7 @@ const deleteCheck = (req, res) => {
 
 const getReportData = async (req, res) => {
     const rut = req.params.rut;
+    console.log('RUT for Report:', rut);
     try {
         const checks = await Check.find({ rut: rut });
         // Contar días trabajados
@@ -58,10 +59,14 @@ const getReportData = async (req, res) => {
         }, 0);
         const standardHoursWorked = daysWorked * 8;
         const extraHoursWorked = Math.max(0, totalHoursWorked - standardHoursWorked);
+        
+        // Modificamos la respuesta aquí, enviamos un objeto con la propiedad 'data'
         res.status(200).json({
-            daysWorked: daysWorked,
-            daysLessThan8Hours: daysLessThan8Hours,
-            extraHoursWorked: extraHoursWorked.toFixed(2), // Redondear a dos decimales
+            data: {
+                daysWorked: daysWorked,
+                daysLessThan8Hours: daysLessThan8Hours,
+                extraHoursWorked: extraHoursWorked.toFixed(2), // Redondear a dos decimales
+            }
         });
     } catch (error) {
         console.error(error);
