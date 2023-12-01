@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import { Table } from "react-bootstrap";
 //import { getAllChecksByRut } from '../../services/check.service';
-import { getReportData } from "../../../../controllers/check.controller";
+//import { getReportData } from "../../../../controllers/check.controller";
 
 const ModalReport = (props) => {
     const { user, showingModal, closeModal } = props;
