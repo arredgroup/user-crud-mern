@@ -1,73 +1,117 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+const db = require("../models/mongodb");
+const Check = db.check;
 
-const app = express();
+const createCheck = (req, res) => {
+  const check = {};
+  check.rut = req.body.rut;
+  check.fecha = req.body.fecha;
+  check.hora = req.body.hora;
+  check.tipo = req.body.tipo;
 
-const userController = require("./controllers/user.controller");
-const checkController = require('./controllers/check.controller');
+  let checkModel = new Check(check);
 
-const authMiddleware = require("./middlewares/auth.middleware");
-const userMiddleware = require("./middlewares/user.middleware");
-
-const db = require("./models/mongodb");
-console.log(db.url);
-db.mongoose
-    .connect(db.url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
-    .then(() => {
-      console.log("Connected to the database!");
-    })
-    .catch(err => {
-      console.log("Cannot connect to the database!", err);
-      process.exit();
-    });
-
-var corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
+  checkModel.save((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    res.status(200).send(user);
+  });
 };
 
-app.use(cors(corsOptions));
-
-
-// parse requests of content-type - application/json
-app.use(express.json());
-
-app.use(authMiddleware);
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-
-// simple route
-app.get("/", (req, res) => {
-  res.json({
-    message: "Welcome to application",
-    data: ["NodeJS", "Express", "MongoDB", "Docker"]
+const searchCheckByRut = (req, res) => {
+  const rut = req.params.rut;
+  Check.find({ rut: rut }, (err, checks) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    res.status(200).send(checks);
   });
-});
+};
 
-/*
- * Routes for User
- */
-app.post("/user",userMiddleware, userController.createUser);
-app.get("/user", userController.readUsers);
-app.get("/user/search/nombre/:nombre", userController.getUserByName);
-app.get("/user/search/rut/:rut", userController.getUserByRut);
-app.put("/user/:rut",userMiddleware, userController.updateUser);
-app.delete("/user/:rut", userMiddleware, userController.deleteUser);
+const deleteCheck = (req, res) => {
+  const fecha = req.query.fecha;
+  const hora = req.query.hora;
+  Check.deleteOne({ fecha: fecha, hora: hora }, (err, checks) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    res.status(200).send(checks);
+  });
+};
 
 
-/*
- * Routes for Check
- */
-app.post("/check", userMiddleware, checkController.createCheck);
-app.get("/check/search/rut/:rut", checkController.searchCheckByRut);
-app.delete("/check/:rut", userMiddleware, checkController.deleteCheck);
 
-// set port, listen for requests
-const PORT = process.env.NODE_DOCKER_PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+const getReportData = (req, res) => {
+  const rut = req.params.rut;
+  Check.find({ rut: rut }, (err, checks) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+
+    let reportData = {
+      daysWorked: 0,
+      daysWorkedLessThanEightHours: 0,
+      extraHoursWorked: 0,
+    };
+
+    let checksByDate = {};
+    checks.forEach((check) => {
+      let date = check.fecha.split("T")[0];
+      if (!checksByDate[date]) {
+        checksByDate[date] = [];
+      }
+      checksByDate[date].push(check);
+    });
+
+    for (let date in checksByDate) {
+      let checks = checksByDate[date];
+      reportData.daysWorked++;
+
+      checks.sort((a, b) => a.hora.localeCompare(b.hora));
+
+      let totalHours = 0;
+      for (let i = 0; i < checks.length; i += 2) {
+        let entrada = checks[i];
+        let salida = checks[i + 1];
+        if (entrada.tipo === 1 && salida.tipo === 2) {
+          let hoursEntrada = parseInt(entrada.hora.split(":")[0]);
+          let hoursSalida = parseInt(salida.hora.split(":")[0]);
+          totalHours += hoursSalida - hoursEntrada;
+        }
+      }
+
+      if (totalHours < 8) {
+        reportData.daysWorkedLessThanEightHours++;
+      } else if (totalHours > 8) {
+        reportData.extraHoursWorked += totalHours - 8;
+      }
+    }
+
+    let reportDataArray = [
+      { name: "Días trabajados", value: reportData.daysWorked },
+      {
+        name: "Días trabajados menos de 8 horas",
+        value: reportData.daysWorkedLessThanEightHours,
+      },
+      { name: "Horas extras trabajadas", value: reportData.extraHoursWorked },
+    ];
+
+    /* // Transforma los datos aquí
+    let transformedData = reportDataArray.map(data => {
+      return { name: data.name, value: data.value };
+    }); */
+
+    res.status(200).send(reportDataArray);
+  });
+};
+
+module.exports = {
+  createCheck,
+  searchCheckByRut,
+  deleteCheck,
+  getReportData,
+};
