@@ -5,6 +5,7 @@ import "./App.css";
 import UserList from "./pages/users/UserList";
 import UserCreate from "./pages/users/UserCreate";
 import CheckIn from "./pages/checks/checkIn";
+
 import "./styles/main.css";
 
 export default function App() {
@@ -22,4 +23,3 @@ export default function App() {
         </Router>
     )
 }
-

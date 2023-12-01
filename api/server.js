@@ -58,6 +58,7 @@ app.get("/user/search/rut/:rut", userController.getUserByRut);
 app.put("/user/:rut",userMiddleware, userController.updateUser);
 app.delete("/user/:rut", userMiddleware, userController.deleteUser);
 
+app.get("/check/report/:rut",checkController.getReportData);
 
 /*
  * Routes for Check
