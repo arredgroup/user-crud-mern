@@ -58,14 +58,14 @@ app.get("/user/search/rut/:rut", userController.getUserByRut);
 app.put("/user/:rut",userMiddleware, userController.updateUser);
 app.delete("/user/:rut", userMiddleware, userController.deleteUser);
 
-app.get("/check/report/:rut",checkController.getReportData);
-
 /*
  * Routes for Check
  */
 app.post("/check", userMiddleware, checkController.createCheck);
 app.get("/check/search/rut/:rut", checkController.searchCheckByRut);
 app.delete("/check/:rut", userMiddleware, checkController.deleteCheck);
+
+app.get("/check/report/:rut",checkController.getReportData);
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;

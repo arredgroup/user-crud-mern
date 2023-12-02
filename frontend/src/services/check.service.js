@@ -27,10 +27,8 @@ const getReportData = async (rut) => {
 };
 
 export const getAllChecksByRut = (rut) => {
-    // Tu lógica para obtener los registros por Rut
     return axios.get(`/checks/${rut}`);
 };
-
 
 export {
     createCheck,

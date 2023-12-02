@@ -45,14 +45,17 @@ const deleteCheck = (req, res) => {
 const getReportData = async (req, res) => {
     const rut = req.params.rut;
     console.log('RUT for Report:', rut);
-    try {
+    try{
         const checks = await Check.find({ rut: rut });
-        // Contar días trabajados
+
+        // Contar los días trabajados
         const uniqueDates = [...new Set(checks.map(check => check.fecha))];
         const daysWorked = uniqueDates.length;
-        // Contar días menos de 8 horas
+
+        // Contar los días menores de 8 horas
         const daysLessThan8Hours = checks.filter(check => check.tipo === "entrada" && check.hora < "08:00:00").length;
-        // Calcular horas extras
+        
+        // Calcular las horas extras
         const totalHoursWorked = checks.reduce((total, check) => {
             const [hours, minutes, seconds] = check.hora.split(":").map(Number);
             return total + hours + minutes / 60 + seconds / 3600;
@@ -60,17 +63,20 @@ const getReportData = async (req, res) => {
         const standardHoursWorked = daysWorked * 8;
         const extraHoursWorked = Math.max(0, totalHoursWorked - standardHoursWorked);
         
-        // Modificamos la respuesta aquí, enviamos un objeto con la propiedad 'data'
-        res.status(200).json({
-            data: {
-                daysWorked: daysWorked,
-                daysLessThan8Hours: daysLessThan8Hours,
-                extraHoursWorked: extraHoursWorked.toFixed(2), // Redondear a dos decimales
-            }
-        });
-    } catch (error) {
+        const reportData = [{
+            name: "Reporte",
+            diasTrabajados: daysWorked,
+            diasMenos8Horas: daysLessThan8Hours,
+            horasExtras: parseFloat(extraHoursWorked.toFixed(2)),
+        }];
+            
+        //console.log('Report Data:', reportData);
+
+        res.status(200).json(reportData);
+
+    }catch (error){
         console.error(error);
-        res.status(500).send({ message: "Error al obtener el informe." });
+        res.status(500).send({ message: "Error al obtener el reporte." });
     }
 };
 
